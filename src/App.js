@@ -1,157 +1,40 @@
-import { useState, useEffect } from "react";
-//import { AuthContext } from "./AuthProvider";
-import "./App.css";
-import { db, auth, provider } from "./firebase-config";
-import { signInWithPopup, signOut } from 'firebase/auth';
-import {
-  collection,
-  getDocs,
-  addDoc,
-  deleteDoc,
-  doc,
-  query, orderBy, limit
-} from "firebase/firestore";
-
-function getSex(s) {
-  return s==='F' ? "Female" : s==='M' ? "Male" : "Undefined";
-}
-function getDate() {
-  const today=new Date();
-  return today.toISOString().split('T')[0]
-}
-function getUser(u) {
-  return u.split(' ')[0];
-}
-
+import React from 'react';
+import Header from './Header';
+import './App.css';
+import './firebase/config';
+import './pages/Signup';
+import { Route, Switch, BrowserRouter, Redirect } from 'react-router-dom';
+import Butterflies from './pages/Butterflies';
+import Signup from './pages/Signup';
+import Login from './pages/Login';
+import { UserProvider } from './firebase/UserProvider';
+import Profile from './pages/Profile';
+import ProfileRedirect from './router/ProfileRedirect';
+import PrivateRoute from './router/PrivateRoute';
+import AdminRoute from './router/AdminRoute';
+import Users from './pages/Users';
 
 function App() {
-  const [newName, setNewName] = useState("");
-  const [newSex, setNewSex] = useState("");
-  const [newDate, setNewDate] = useState(getDate());
-  const [butterflies, setButterflies] = useState([]);
-  const [user, setUser] = useState("");
-
-  const userSignIn = async () => {
-
-    console.log("sign in");
-  
-    signInWithPopup(auth, provider)
-    .then((result) => {
-      setUser(getUser(result.user.auth.currentUser.displayName));
-    }).catch((error) => {
-      console.log(error);
-    });
-  
-  }
-
-  const userSignOut = () => {
-    
-    signOut(auth).then(() => {
-      console.log(user,"Sign out")
-      setUser("")
-    }).catch((error) => {
-    });
-  }
-
-
-  const createButterfly = async () => {
-  //  console.log("adding "+newName)
-    const butterfliesCollectionRef = collection(db, "butterflies");
-    const newButterfly = { name: newName, date: newDate, sex: newSex }
-    const docRef = await addDoc(butterfliesCollectionRef, newButterfly );
-    newButterfly.id=docRef.id;
-    setButterflies([newButterfly,...butterflies])
-    setNewName("")
-    setNewSex("")
-    setNewDate(getDate())
-  };
-
-
-  const deleteButterfly = async (id) => {
-//    console.log("deleting " + id)
-    const butterflyDoc = doc(db, "butterflies", id);
-    setButterflies(butterflies.filter(butterfly => butterfly.id !== id))
-    await deleteDoc(butterflyDoc);
-  };
-
-  useEffect(() => {
-    const getButterflies = async () => {
-      const butterfliesCollectionRef = collection(db, "butterflies");
-      const butterfliesQuery = query(butterfliesCollectionRef, orderBy("date","desc"), limit(60));
-      const data = await getDocs(butterfliesQuery);
-      setButterflies(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
-    };
-
-    getButterflies();
-  }, []);
-
   return (
-    <div className="App">
-
-{user ? (
-      <button onClick={userSignOut}>Sign {user} Out</button>
-      ) : (
-      <button onClick={userSignIn}>Sign In</button>
-      )};
-
-      <table>
-      <thead>
-      <tr>
-          <th>Name</th>
-          <th>Sex</th>
-          <th>Date</th>
-          <th>Actions</th>
-      </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>
-          <input
-        placeholder="Name..."  value={newName}
-        onChange={(event) => {
-          setNewName(event.target.value);
-        }}
-      />          </td>
-      <td>
-      <select name="sex"  value={newSex}
-      onChange={(event) => { setNewSex(event.target.value) }}>
-    <option value="F">Female</option>
-    <option value="M">Male</option>
-    <option value="">Undefined</option>
-    </select>
-      </td>
-      <td>
-      <input  type="date"
-        value={newDate}
-        onChange={(event) => {
-          setNewDate(event.target.value);
-        }}
-      />
-      </td>
-      <td>
-      <button onClick={createButterfly} disabled={!newName||!user}>Insert</button>
-      </td>
-        </tr>
-      {butterflies.map((butterfly) => {
-        return (
-           <tr key={butterfly.id}>
-          <td>{butterfly.name}</td>
-          <td>{getSex(butterfly.sex)}</td>
-          <td>{butterfly.date}</td>
-          <td><button  disabled={!butterfly.id}
-              onClick={() => {
-                deleteButterfly(butterfly.id);
-              }}
-            >
-              Delete
-            </button>
-            </td>
-          </tr>
-        );
-      })}
- </tbody>
-</table>
-    </div>
+    <UserProvider>
+      <BrowserRouter>
+        <Header></Header>
+        <div className="app">
+          <div className="ui grid container">
+            <Switch>
+            <Route exact path="/butterflies" component={Butterflies} />                 
+            <ProfileRedirect exact path="/signup" component={Signup} />
+              <PrivateRoute exact path="/profile/:id" component={Profile} />
+              <ProfileRedirect exact path="/login" component={Login} />
+              <AdminRoute exact path="/users" component={Users} />
+              <Route exact path="/">
+                <Redirect to="/butterflies" />
+              </Route>
+            </Switch>
+          </div>
+        </div>
+      </BrowserRouter>
+    </UserProvider>
   );
 }
 
