@@ -1,10 +1,10 @@
 import React from 'react';
 import { logout } from './firebase/auth';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { useSession } from './firebase/UserProvider';
 
 function Header() {
-  const history = useHistory();
+  const history = useNavigate();
   const { user } = useSession();
 
   const logoutUser = async () => {
@@ -17,7 +17,7 @@ function Header() {
       <h2>{process.env.REACT_APP_NAME}</h2>
       {!!user && (
         <button className="ui secondary button logout" onClick={logoutUser}>
-          LOGOUT
+          Logout
         </button>
       )}
     </header>

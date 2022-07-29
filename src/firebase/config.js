@@ -1,18 +1,20 @@
-import firebase from 'firebase/app';
-import 'firebase/firestore';
-import 'firebase/storage';
+//import firebase from 'firebase/compat/app';
+import { initializeApp } from "firebase/app";
+import { getFirestore } from "firebase/firestore";
+import { getStorage} from 'firebase/storage';
+import { getAuth } from 'firebase/auth';
 
-const dbURL = process.env.REACT_APP_DATABASE_URL;
+// Kupulele Firebase configuration
+const firebaseConfig = {
+  apiKey: "AIzaSyDjsMqOYErjhwXh8NVZHptUIOPlH9dgbKA",
+  authDomain: "kupulele.firebaseapp.com",
+  projectId: "kupulele",
+  storageBucket: "kupulele.appspot.com",
+  messagingSenderId: "759443667425",
+  appId: "1:759443667425:web:f9a6f06122f702e7bebaa0"
+};
 
-firebase.initializeApp({
-  apiKey: process.env.REACT_APP_API_KEY,
-  authDomain: process.env.REACT_APP_AUTH_DOMAIN,
-  databaseURL: dbURL,
-  projectId: process.env.REACT_APP_PROJECT_ID,
-  storageBucket: process.env.REACT_APP_STORAGE_BUCKET,
-  messagingSenderId: process.env.REACT_APP_MESSAGING_SENDER_ID,
-});
-console.log(firebase.app().options);
-
-export const firestore = firebase.firestore();
-export const storage = firebase.storage();
+const app = initializeApp(firebaseConfig);
+export const firestore = getFirestore(app)
+export const storage = getStorage(app)
+export const auth = getAuth(app);

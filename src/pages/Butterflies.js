@@ -1,5 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { firestore } from '../firebase/config';
+import {
+  collection,  getDocs,  addDoc,  deleteDoc,  query, orderBy
+} from "firebase/firestore";
 import { Datatable } from './Datatable';
 
 function getSex(s) {
@@ -38,7 +41,7 @@ const Butterflies = () => {
 
   const handleSave = async () => {
     console.log("saving "+newName+" "+newId)
-    const butterfliesRef = firestore.collection('butterflies');
+    const butterfliesRef = collection(firestore, 'butterflies');
     const newButterfly = { name: newName, date: newDate, sex: newSex }
     console.log(newId, JSON.stringify(newButterfly));
     if (newId) {
@@ -47,7 +50,7 @@ const Butterflies = () => {
       await docId.update( newButterfly );
       setButterflies(butterflies.filter(butterfly => butterfly.id !== newId))
     } else {
-      const docRef = await butterfliesRef.add( newButterfly );
+      const docRef = await addDoc(butterfliesRef, newButterfly );
       newButterfly.id = docRef.id;
     }
     newButterfly.sex=getSex(newButterfly.sex);
@@ -56,15 +59,12 @@ const Butterflies = () => {
   };
 
 
-  const handleDelete = (id) => {
+  const handleDelete = async (id) => {
         console.log("deleting:" + id)
         setButterflies(butterflies.filter(butterfly => butterfly.id !== id))
-        const butterflyDoc = firestore.collection('butterflies').doc(id)
-        butterflyDoc.delete().then(() => {
-          console.log("Document "+id+" deleted");
-        }).catch((error) => {
-          console.error("Delete error: ", error);
-        });
+        const butterfliesRef = collection(firestore, 'butterflies');
+        const butterflyDoc = butterfliesRef.doc(id);
+        await deleteDoc(butterflyDoc);
   };
 
   const handleEdit = (event, butterfly) => {
@@ -77,14 +77,17 @@ const Butterflies = () => {
   };
 
   useEffect(() => {
-    const butterfliesRef = firestore.collection('butterflies');
-    const unsubscribe = butterfliesRef.onSnapshot((querySnapshot) => {
-      const butterflies = querySnapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id }));
+    const getButterflies = async () => {
+      const butterfliesCollectionRef = collection(firestore, "butterflies");
+      const butterfliesQuery = query(butterfliesCollectionRef, orderBy("date","desc"));
+      const data = await getDocs(butterfliesQuery);
+      const butterflies = data.docs.map((doc) => ({ ...doc.data(), id: doc.id }));
       // set sex for each butterfly
       butterflies.forEach (butterfly => { butterfly.sex=getSex(butterfly.sex) });
       setButterflies(butterflies);
-    });
-    return unsubscribe;
+     };
+
+    getButterflies();
   }, []);
 
   function getSaveIcon() {
@@ -104,8 +107,9 @@ const Butterflies = () => {
           />
 </div>
 <div class="column">
-<h1> {action} butterfly  </h1>
-       <table>
+<h1> <img src="./favicon.ico" alt="butterfly" /> {action} butterfly  </h1>
+<p></p>
+       <table className="ui celled table">
          <thead>
          <tr>
            <th className="table-header">Name</th>

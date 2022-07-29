@@ -1,8 +1,9 @@
 import React, { useEffect, useState, useContext } from 'react';
-import firebase from 'firebase/app';
+import firebase from "firebase/compat/app";
+import 'firebase/compat/auth';
 
 export const UserContext = React.createContext();
-
+const auth = firebase.auth();
 export const UserProvider = (props) => {
   const [session, setSession] = useState({
     user: null,
@@ -11,7 +12,7 @@ export const UserProvider = (props) => {
   });
 
   useEffect(() => {
-    const unsubscribe = firebase.auth().onAuthStateChanged(async (user) => {
+    const unsubscribe = auth.onAuthStateChanged(async (user) => {
       let isAdmin = false;
 
       if (user) {

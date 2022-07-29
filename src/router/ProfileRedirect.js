@@ -1,5 +1,5 @@
 import React from 'react';
-import { Route, Redirect } from 'react-router-dom';
+import { Route, Navigate } from 'react-router-dom';
 import { useSession } from '../firebase/UserProvider';
 
 const ProfileRedirect = ({ component: Component, ...rest }) => {
@@ -12,7 +12,7 @@ const ProfileRedirect = ({ component: Component, ...rest }) => {
         !user ? (
           <Component {...props} />
         ) : (
-          <Redirect
+          <Navigate
             to={{
               pathname: isAdmin ? '/users' : `/profile/${user.uid}`,
               state: { from: props.location },

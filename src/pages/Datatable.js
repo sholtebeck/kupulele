@@ -64,7 +64,7 @@ export function Datatable({ columns, rows, handleClear, handleEdit, handleDelete
                     <button onClick={clearAll}><i className="filter icon"></i></button>
             </div>
     <p/>
-            <table className="dataTable" >
+            <table className="ui celled table">
                 <thead>
                     <tr>
                         {columns.map((column) => {

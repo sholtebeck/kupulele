@@ -1,5 +1,5 @@
 import React from 'react';
-import { Route, Redirect } from 'react-router-dom';
+import { Route, Navigate } from 'react-router-dom';
 import { useSession } from '../firebase/UserProvider';
 
 const AdminRoute = ({ component: Component, ...rest }) => {
@@ -12,7 +12,7 @@ const AdminRoute = ({ component: Component, ...rest }) => {
         if (!!user && isAdmin) {
           return <Component {...props} />;
         } else {
-          return <Redirect to="/login" />;
+          return <Navigate to="/login" />;
         }
       }}
     />
