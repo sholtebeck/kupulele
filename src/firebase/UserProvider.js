@@ -1,9 +1,10 @@
 import React, { useEffect, useState, useContext } from 'react';
-import firebase from "firebase/compat/app";
-import 'firebase/compat/auth';
+//import firebase from "firebase/compat/app";
+import {app, auth} from './config';
+//import 'firebase/compat/auth';
 
 export const UserContext = React.createContext();
-const auth = firebase.auth();
+//const auth = firebase.auth();
 export const UserProvider = (props) => {
   const [session, setSession] = useState({
     user: null,

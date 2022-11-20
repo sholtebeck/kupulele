@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { firestore } from '../firebase/config';
-import {
-  collection,  getDocs,  addDoc,  deleteDoc,  query, orderBy
-} from "firebase/firestore";
+import {  collection,  getDocs,  addDoc,  deleteDoc,  query, orderBy} from "firebase/firestore";
 import { Datatable } from './Datatable';
 
 function getSex(s) {
@@ -107,6 +105,7 @@ const Butterflies = () => {
           />
 </div>
 <div class="column">
+  <p></p>
 <h1> <img src="./favicon.ico" alt="butterfly" /> {action} butterfly  </h1>
 <p></p>
        <table className="ui celled table">
@@ -146,7 +145,7 @@ const Butterflies = () => {
     <td>
     { newName ? (
       <div> 
-    <button type="button" onClick={handleSave}> <i class={getSaveIcon()}></i></button>
+    <button type="button" onClick={handleSave}> <i className={getSaveIcon()}></i></button>
     <button type="button" onClick={handleClear}><i className="undo icon"></i></button>
     </div>
     ):(<div>

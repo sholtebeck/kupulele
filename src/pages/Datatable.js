@@ -85,7 +85,7 @@ export function Datatable({ columns, rows, handleClear, handleEdit, handleDelete
                                 </th>
                             )
                         })}
-                        <th className="table-header">Action</th>
+                        {handleEdit && <th className="table-header">Action</th> }
                     </tr>
                 </thead>
                 <tbody>
@@ -96,8 +96,12 @@ export function Datatable({ columns, rows, handleClear, handleEdit, handleDelete
                                     if (column.format) {
                                         return <td key={column.accessor}>{column.format(row[column.accessor])}</td>
                                     }
+                                    if (column.accessor === "id") {
+                                        return <td key={column.accessor}><a href={row.id}>{row[column.accessor]}</a></td>
+                                    }
                                     return <td key={column.accessor}>{row[column.accessor]}</td>
                                 })}
+                                { handleEdit && 
                                 <td>
                                 <button type="button"
                                 onClick={(event) => handleEdit(event, row)}
@@ -108,6 +112,8 @@ export function Datatable({ columns, rows, handleClear, handleEdit, handleDelete
                                 ><i className="delete icon"></i>
                                 </button>                             
                                 </td>
+                    }
+
                             </tr>
                         )
                     })}

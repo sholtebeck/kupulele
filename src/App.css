@@ -43,6 +43,7 @@ header h2 {
 
 .ui.card.login-card {
   width: 450px;
+  align-items: center;
 }
 
 .ui.form input[type='text'],
@@ -116,4 +117,9 @@ table, th, td {
 .table-header {
   text-align:left;
   background-color:lightgrey;
+}
+
+.half-size {
+  float: left; 
+  width: "60%";
 }

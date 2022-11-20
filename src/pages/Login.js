@@ -1,79 +1,50 @@
-import React, { useState } from 'react';
-import { useForm } from 'react-hook-form';
-import { login } from '../firebase/auth';
-import { Link } from 'react-router-dom';
+import { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
 
-function Login(props) {
-  const { register, handleSubmit, reset } = useForm();
-  const [isLoading, setLoading] = useState(false);
+const Login = () => {
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    const [error, setError] = useState('');
+//    const emap = {"Susy":"ingrahas@gmail.com","Steve":"sholtebeck@gmail.com"}
+    const navigate = useNavigate();
 
-  const routeOnLogin = async (user) => {
-    const token = await user.getIdTokenResult();
-    if (token.claims.admin) {
-      props.history.push('/users');
-    } else {
-      props.history.push(`/profile/${user.uid}`);
-    }
-  };
-
-  const onSubmit = async (data) => {
-    let user;
-    setLoading(true);
-    try {
-      user = await login(data);
-      reset();
-    } catch (error) {
-      console.log(error);
+    const logIn = async () => {
+        try {
+            await signInWithEmailAndPassword(getAuth(), email, password);
+            navigate('/butterflies');
+        } catch (e) {
+            setError(e.message);
+        }
     }
 
-    if (user) {
-      routeOnLogin(user);
-    } else {
-      setLoading(false);
-    }
-  };
-
-  const formClassName = `ui form ${isLoading ? 'loading' : ''}`;
-
-  return (
-    <div className="login-container">
+    return (
+      <div className="login-container"> 
       <div className="ui card login-card">
-        <div className="content">
-          <form className={formClassName} onSubmit={handleSubmit(onSubmit)}>
-            <div className="field">
-              <label>
-                Email
-                <input
-                  type="email"
-                  name="email"
-                  placeholder="Email"
-                  ref={register}
-                />
-              </label>
-            </div>
-            <div className="field">
-              <label>
-                Password
-                <input
-                  type="password"
-                  name="password"
-                  placeholder="Password"
-                  ref={register}
-                />
-              </label>
-            </div>
-            <div className="field actions">
-              <button className="ui primary button login" type="submit">
-                Login
-              </button>
-              or
-              <Link to="/signup">Sign Up</Link>
-            </div>
-          </form>
+        <h1>Kupulele Login</h1>
+        {error && <p className="error">{error}</p>}
+        <label> 
+        <strong>Username: </strong> 
+        <input
+            placeholder="Your email address"
+            value={email}
+            size="30"
+            onChange={e => setEmail(e.target.value)} />
+        </label>
+        <label>
+        <strong>Password: </strong>
+        <input
+            type="password"
+            placeholder="Your password"
+            value={password}
+            size="30"
+            onChange={e => setPassword(e.target.value)} />
+        </label><p></p>
+        <button className="ui primary button login" onClick={logIn}>Log In</button>
+        <Link to="/signup">Don't have an account? Create one here</Link>
         </div>
-      </div>
-    </div>
-  );
+        </div>
+    );
 }
 
 export default Login;

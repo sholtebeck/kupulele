@@ -1,4 +1,4 @@
-// Google Cloud API for rest functions
+// Google Cloud API for kupulele rest functions
 const { https } = require("firebase-functions");
 const { initializeApp } = require('firebase-admin/app');
 const functions = require("firebase-functions");
@@ -15,6 +15,22 @@ initializeApp({
 
 const app = express();
 
+function removeKupu(path) {
+  return function(req, res, next) {
+    const orgUrl = req.url; // stash original URL
+    // do nothing if not on cloudfunctions.net or path doesn't match
+    if (!orgUrl.startsWith(path)) {
+      return next();
+    }
+    // if here, trim path off of the request's URL
+    req.url = req.originalUrl = orgUrl.slice(path.length);
+    // hand over to other app.get(), app.use(), etc.
+    next('route');
+  }
+}
+
+app.use(removeKupu("/kupu"));
+
 app.get("/", async (req, res) => {
   const snapshot = await admin.firestore().collection("butterflies").get();
 
@@ -30,6 +46,7 @@ app.get("/", async (req, res) => {
 });
 
 app.get("/:id", async (req, res) => {
+
     const snapshot = await admin.firestore().collection('butterflies').doc(req.params.id).get();
 
     const butterflyId = snapshot.id;

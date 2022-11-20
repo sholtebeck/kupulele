@@ -1,94 +1,63 @@
-import React, { useState } from 'react';
-import { useForm } from 'react-hook-form';
-import { signup } from '../firebase/auth';
-import { Link } from 'react-router-dom';
+import { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth';
 
-function Signup(props) {
-  const { register, handleSubmit, reset } = useForm();
-  const [isLoading, setLoading] = useState(false);
+const Signup = () => {
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    const [confirmPassword, setConfirmPassword] = useState('');
+    const [error, setError] = useState('');
 
-  const onSubmit = async (data) => {
-    let newUser;
-    setLoading(true);
-    try {
-      newUser = await signup(data);
-      reset();
-    } catch (error) {
-      console.log(error);
+    const navigate = useNavigate();
+
+    const createAccount = async () => {
+        try {
+            if (password !== confirmPassword) {
+                setError('Password and confirm password do not match');
+                return;
+            }
+
+            await createUserWithEmailAndPassword(getAuth(), email, password);
+            navigate('/butterflies');
+        } catch (e) {
+            setError(e.message);
+        }
     }
 
-    if (newUser) {
-      props.history.push(`/profile/${newUser.uid}`);
-    } else {
-      setLoading(false);
-    }
-  };
-
-  const formClassName = `ui form ${isLoading ? 'loading' : ''}`;
-
-  return (
-    <div className="login-container">
-      <div className="ui card login-card">
-        <div className="content">
-          <form className={formClassName} onSubmit={handleSubmit(onSubmit)}>
-            <div className="two fields">
-              <div className="field">
-                <label>
-                  First Name
-                  <input
-                    type="text"
-                    name="firstName"
-                    placeholder="First Name"
-                    ref={register}
-                  />
-                </label>
-              </div>
-              <div className="field">
-                <label>
-                  Last Name
-                  <input
-                    type="text"
-                    name="lastName"
-                    placeholder="Last Name"
-                    ref={register}
-                  />
-                </label>
-              </div>
-            </div>
-            <div className="field">
-              <label>
-                Email
-                <input
-                  type="email"
-                  name="email"
-                  placeholder="Email"
-                  ref={register}
-                />
-              </label>
-            </div>
-            <div className="field">
-              <label>
-                Password
-                <input
-                  type="password"
-                  name="password"
-                  placeholder="Password"
-                  ref={register}
-                />
-              </label>
-            </div>
-            <div className="field actions">
-              <button className="ui primary button login" type="submit">
-                Signup
-              </button>
-              or
-              <Link to="/login">Log In</Link>
-            </div>
-          </form>
+    return (
+      <div className="login-container"> 
+      <div className="ui card login-card"> 
+        <h1>Create Kupulele Account</h1>
+        {error && <p className="error">{error}</p>}
+        <label> 
+        <strong>Username: </strong> 
+        <input
+            placeholder="Your email address"
+            value={email}
+            size="35"
+            onChange={e => setEmail(e.target.value)} />
+        </label>
+        <label>
+        <strong>Password: </strong>
+        <input
+            type="password"
+            placeholder="Your password"
+            value={password}
+            size="15"
+            onChange={e => setPassword(e.target.value)} />
+        <input
+            type="password"
+            placeholder="Re-enter password"
+            value={confirmPassword}
+            size="15"
+            onChange={e => setConfirmPassword(e.target.value)} />
+        </label><p></p>
+        <button className="ui primary button login" onClick={createAccount}>Create Account</button>
+        <Link to="/login">Already have an account? Log in here</Link>
         </div>
-      </div>
-    </div>
-  );
-}
+        </div>
+    );
+    }
 
 export default Signup;
+
