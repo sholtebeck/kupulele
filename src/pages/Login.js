@@ -1,8 +1,10 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
+import { getAuth, signInWithEmailAndPassword, GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
+//import { login, googleLogin } from '../firebase/auth';
 
-const Login = () => {
+const Login = (props) => {
+    props.funcNav(false);
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
@@ -18,10 +20,21 @@ const Login = () => {
         }
     }
 
+    const googleLogIn = async () => {
+        try {
+            console.log("googleLogIn");
+            var provider = new GoogleAuthProvider();
+            await signInWithPopup(getAuth(), provider);
+            navigate('/butterflies');
+        } catch (e) {
+            setError(e.message);
+        }
+    }
+
     return (
       <div className="login-container"> 
       <div className="ui card login-card">
-        <h1>Kupulele Login</h1>
+        <h1><img src="./favicon.ico" alt="butterfly" /> Kupulele Login</h1>
         {error && <p className="error">{error}</p>}
         <label> 
         <strong>Username: </strong> 
@@ -41,6 +54,7 @@ const Login = () => {
             onChange={e => setPassword(e.target.value)} />
         </label><p></p>
         <button className="ui primary button login" onClick={logIn}>Log In</button>
+        <button onClick={googleLogIn}>Google Log In</button>
         <Link to="/signup">Don't have an account? Create one here</Link>
         </div>
         </div>

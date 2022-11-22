@@ -31,8 +31,8 @@ header h2 {
   left: 10px;
 }
 
-.app {
-  margin-top: 100px;
+.App {
+  margin-top: 10px;
 }
 
 .login-container {
@@ -122,4 +122,49 @@ table, th, td {
 .half-size {
   float: left; 
   width: "60%";
+}
+
+nav {
+  border-bottom: 4px solid black;
+  text-align: left;
+  position: fixed;
+  top: 0;
+  width: 100%;
+  background: white;
+}
+
+nav ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
+
+nav li {
+  display: inline-block;
+  font-size: 16px;
+  padding-top: 15px;
+  padding-bottom: 15px;
+}
+
+nav a {
+  text-decoration: none;
+  color: black;
+  font-weight: bold;
+  padding: 24px 32px;
+}
+
+nav a:hover {
+  background: black;
+  color: white;
+}
+
+.nav-right {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+}
+
+#page-body {
+  margin: auto;
+  padding-top: 50px;
 }

@@ -1,40 +1,21 @@
-import React, { useEffect, useState, useContext } from 'react';
-//import firebase from "firebase/compat/app";
-import {app, auth} from './config';
-//import 'firebase/compat/auth';
+import { useState, useEffect } from 'react';
+import { getAuth, onAuthStateChanged } from 'firebase/auth';
 
-export const UserContext = React.createContext();
-//const auth = firebase.auth();
-export const UserProvider = (props) => {
-  const [session, setSession] = useState({
-    user: null,
-    loading: true,
-    isAdmin: false,
-  });
+const UserProvider = () => {
+  
+    const [user, setUser] = useState(null);
+    const [isLoading, setIsLoading] = useState(true);
 
-  useEffect(() => {
-    const unsubscribe = auth.onAuthStateChanged(async (user) => {
-      let isAdmin = false;
+    useEffect(() => {
+        const unsubscribe = onAuthStateChanged(getAuth(), user => {
+            setUser(user);
+            setIsLoading(false);
+        });
 
-      if (user) {
-        const token = await user.getIdTokenResult();
-        isAdmin = token.claims.admin;
-      }
+        return unsubscribe;
+    }, []);
 
-      setSession({ loading: false, user, isAdmin });
-    });
+    return { user, isLoading };
+}
 
-    return () => unsubscribe();
-  }, []);
-
-  return (
-    <UserContext.Provider value={session}>
-      {!session.loading && props.children}
-    </UserContext.Provider>
-  );
-};
-
-export const useSession = () => {
-  const session = useContext(UserContext);
-  return session;
-};
+export default UserProvider;

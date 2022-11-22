@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
+import UserProvider from '../firebase/UserProvider'
 import { firestore } from '../firebase/config';
 import {  collection,  getDocs,  addDoc,  deleteDoc,  query, orderBy} from "firebase/firestore";
 import { Datatable } from './Datatable';
+
 
 function getSex(s) {
   return s==='F' ? "Female" : s==='M' ? "Male" : "Undefined";
@@ -17,6 +19,8 @@ function getDate() {
 
 
 const Butterflies = () => {
+  const { user, isLoading } = UserProvider();
+
   const columns = [
     { accessor: 'name', label: 'Name ' },
     { accessor: 'date', label: 'Date ' },
@@ -85,8 +89,10 @@ const Butterflies = () => {
       setButterflies(butterflies);
      };
 
-    getButterflies();
-  }, []);
+    if (!isLoading) {
+         getButterflies();
+    }
+  }, [isLoading]);
 
   function getSaveIcon() {
     return action==="Add" ? "plus icon" : "check icon";
@@ -94,17 +100,17 @@ const Butterflies = () => {
 
   return (
     <div className="App">
-  <div class="ui two column grid">
-    <div class="row"> 
-  <div class="column">
-      <h1><img src="./favicon.ico" alt="butterfly" /> Butterflies</h1>
+  <div className="ui two column grid">
+    <div className="row"> 
+  <div className="column">
+      <h1><img src="./favicon.ico" alt="butterfly" /> Butterflies</h1> 
        <Datatable rows={butterflies} columns={columns} 
           handleClear={handleClear}
           handleEdit={handleEdit} 
           handleDelete={handleDelete}
           />
 </div>
-<div class="column">
+<div className="column">
   <p></p>
 <h1> <img src="./favicon.ico" alt="butterfly" /> {action} butterfly  </h1>
 <p></p>

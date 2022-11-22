@@ -2,7 +2,8 @@ import { useParams } from 'react-router-dom';
 //import { firestore } from '../firebase/config';
 import {butterflies} from './butterfly-data';
 
-function NewButterfly() {
+function NewButterfly(props) {
+  props.funcNav(false); // disableNavbar
   const { id } = useParams();
   const _id=Number(id)
   const butterfly=butterflies.find(butterfly => butterfly.id === id);
