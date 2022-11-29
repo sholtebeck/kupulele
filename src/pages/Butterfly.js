@@ -1,97 +1,112 @@
-import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
-import { useForm } from 'react-hook-form';
-import { useSession } from '../firebase/UserProvider';
+import React, { useState } from 'react';
 import { firestore } from '../firebase/config';
-import { updateButterfly } from '../firebase/butterflies';
-import { ProfileImage } from '../ProfileImage';
+import {  collection, doc, addDoc, setDoc } from "firebase/firestore";
 
-const Butterfly = () => {
-  const { user } = useSession();
-  const params = useParams();
-  const { register, setValue, handleSubmit } = useForm();
-  const [butterfly, setButterfly] = useState(null);
-  const [isLoading, setLoading] = useState(false);
+function getSex(s) {
+  return s==='F' ? "Female" : s==='M' ? "Male" : "Undefined";
+}
 
-  useEffect(() => {
-    const docRef = firestore.collection('butterflies').doc(params.id);
-    const unsubscribe = docRef.onSnapshot((doc) => {
-      if (doc.exists) {
-        const documentData = doc.data();
-        setButterfly(documentData);
-        const formData = Object.entries(documentData).map((entry) => ({
-          [entry[0]]: entry[1],
-        }));
 
-        setValue(formData);
-      }
-    });
-    return unsubscribe;
-  }, [setValue, params.id]);
+const Butterfly = ({action,butterfly,handleClear,handleUpsert}) => {
 
-  const onSubmit = async (data) => {
-    try {
-      setLoading(true);
-      await updateButterfly({ id: params.id, ...data });
-    } catch (error) {
-      console.log(error);
-    } finally {
-      setLoading(false);
+  const [newId,setNewId] = useState(butterfly.id);
+  const [newName, setNewName] = useState(butterfly.name);
+  const [newSex, setNewSex] = useState(butterfly.sex);
+  const [newDate, setNewDate] = useState(butterfly.date);
+
+  const handleSave = async () => {
+    console.log("saving "+newName+" "+newId)
+    const newButterfly = { id: newId, name: newName, date: newDate, sex: newSex }
+    console.log(newId, JSON.stringify(newButterfly));
+    if (newId) {
+      await setDoc(doc(firestore, "butterflies", newId), newButterfly);
+    } else {
+      await addDoc(collection(firestore, "butterflies"), newButterfly);
     }
+    newButterfly.sex=getSex(newButterfly.sex);
+    handleUpsert(newButterfly);
   };
 
-  if (!butterfly) {
-    return null;
+  function getSaveIcon() {
+    return action==="Add" ? "plus icon" : "check icon";
   }
 
-  const formClassname = `ui big form twelve wide column ${isLoading ? 'loading' : ''}`;
+  function getName() {
+    return action==="Add" ? "Butterfly" : newName;
+  }
 
   return (
-    <div
-      className="add-form-container"
-      style={{ maxWidth: 960, margin: '50px auto' }}
-    >
-      <div className="ui grid stackable">
-        <ProfileImage id={params.id} />
-        <form className={formClassname} onSubmit={handleSubmit(onSubmit)}>
-          <div className="fields">
-          <div className="four wide field">
-          <label>
-                ID: 
-                {params.id}
-              </label>
-          </div>
-            <div className="four wide field">
-              <label>
-                Name
-                <input type="text" name="name" ref={register} />
-              </label>
-            </div>
-            <div className="two wide field">
-              <label>
-                Date
-                <input type="date" name="date" ref={register} />
-              </label>
-            </div>
-            <div className="three wide field">
-              <label>
-                Sex
-                <select name="sex"  ref={register} >
-                 <option value="F">Female</option>
-                 <option value="M">Male</option>
-                <option value="">Undefined</option>
-            </select>
-              </label>
-            </div>
-          </div>
-         ( {user} ? <button
-            type="submit"
-            className="ui submit large grey button right floated"  >
-            Submit
-          </button>
-         )
-        </form>
-      </div>
+    <div className="App">
+  <p></p>
+<h1> <img src="/favicon.ico" alt="butterfly" /> {action} {getName()}  </h1>
+<p></p>
+       <table className="ui celled table no-border">
+        <thead><tr>
+          <th>Field</th>
+          <th>Value</th>
+          </tr>
+        </thead>
+         <tbody>
+          <tr>
+            <td className="column-header">ID</td>
+            <td><input 
+         value={newId}
+        onChange={(event) => {
+          setNewId(event.target.value);
+        }}
+      />  </td>
+          </tr>
+           <tr>
+            <td className="column-header">Name</td>
+       <td>
+       <input 
+        placeholder="Name"  value={newName}
+        onChange={(event) => {
+          setNewName(event.target.value);
+        }}
+      />       </td>
+      </tr>
+      <tr>
+        <td className="column-header">Date</td>
+      <td>
+      <input  type="date" 
+        value={newDate}
+        onChange={(event) => {
+          setNewDate(event.target.value);
+        }}
+      />
+      </td>
+      </tr>
+      <tr>
+        <td className="column-header">Sex</td>
+      <td>
+      <select name="sex"  value={newSex} 
+      onChange={(event) => { setNewSex(event.target.value) }}>
+    <option value="F">Female</option>
+    <option value="M">Male</option>
+    <option value="">Undefined</option>
+    </select>
+    </td>
+    </tr>
+      <tr>
+        <td className="column-header">Action</td>
+    <td>
+    { newName ? (
+      <div> 
+    <button type="button" onClick={handleSave}> <i className={getSaveIcon()}></i></button>
+    <button type="button" onClick={handleClear}><i className="undo icon"></i></button>
+    </div>
+    ):(<div>
+      <button type="button" onClick={handleClear}> 
+      <i className="undo icon"></i>
+      </button>
+    </div>)
+    } 
+ 
+    </td></tr>
+      </tbody>
+      </table>
+
     </div>
   );
 };

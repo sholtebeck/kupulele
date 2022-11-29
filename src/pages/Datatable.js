@@ -2,7 +2,7 @@ import React, { useState, useMemo } from 'react'
 import { sortRows, filterRows, paginateRows } from '../helpers'
 import { Pagination } from './Pagination'
 
-export function Datatable({ columns, rows, handleClear, handleEdit, handleDelete }) {
+export function Datatable({ columns, rows, handleAdd, handleClear, handleEdit, handleDelete }) {
     const [activePage, setActivePage] = useState(1)
     const [filters, setFilters] = useState({})
     const [sort, setSort] = useState({ order: 'desc', orderBy: 'date' })
@@ -62,6 +62,7 @@ export function Datatable({ columns, rows, handleClear, handleEdit, handleDelete
             value={filters["name"]}
             onChange={(event) => handleSearch(event.target.value, "name")} />
                     <button onClick={clearAll}><i className="filter icon"></i></button>
+            {handleAdd && <button onClick={handleAdd}><i className="add icon"></i></button> }
             </div>
     <p/>
             <table className="ui celled table">
@@ -124,7 +125,8 @@ export function Datatable({ columns, rows, handleClear, handleEdit, handleDelete
                     count={count}
                     rowsPerPage={rowsPerPage}
                     totalPages={totalPages}
-                    setActivePage={setActivePage} />
+                    setActivePage={setActivePage} 
+                    handleDelete={handleDelete} />
             ) : (
             <tr><td><p>No Data Found</p></td></tr>
             )}

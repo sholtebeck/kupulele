@@ -53,6 +53,11 @@ header h2 {
   margin-top: 10px;
 }
 
+.login-button {
+  width: 80%;
+  align-content: center;
+}
+
 .logout {
   float: right;
   position: relative;
@@ -119,9 +124,15 @@ table, th, td {
   background-color:lightgrey;
 }
 
-.half-size {
+.column-header {
+  text-align:center;
+  background-color: whitesmoke;
+  font-weight: 600;
+}
+
+.no-border {
   float: left; 
-  width: "60%";
+  border: none;
 }
 
 nav {

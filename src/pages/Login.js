@@ -1,10 +1,14 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { getAuth, signInWithEmailAndPassword, GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
+
+//import GoogleButton from "react-google-button";
 //import { login, googleLogin } from '../firebase/auth';
 
-const Login = (props) => {
-    props.funcNav(false);
+const Login = () => {
+ 
+//   props.funcNav(false);
+    
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
@@ -53,8 +57,9 @@ const Login = (props) => {
             size="30"
             onChange={e => setPassword(e.target.value)} />
         </label><p></p>
-        <button className="ui primary button login" onClick={logIn}>Log In</button>
-        <button onClick={googleLogIn}>Google Log In</button>
+        <button className="ui primary button login-button" onClick={logIn}>Log In</button>
+        <p></p>
+        <button className="ui secondary button login-button" onClick={googleLogIn}>Google Log In</button>
         <Link to="/signup">Don't have an account? Create one here</Link>
         </div>
         </div>

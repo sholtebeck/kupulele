@@ -100,6 +100,10 @@ export const butterflies = [
     {'id': '1099', 'date': '2022-01-15', 'name': 'Morticia', 'sex': 'F'} 
     ];
 
+export function getButterfly(id) {
+    return butterflies.find(butterfly => butterfly.id === id);
+}
+
 export function getSex(s) {
     return s==='F' ? "Female" : s==='M' ? "Male" : "Undefined";
   }

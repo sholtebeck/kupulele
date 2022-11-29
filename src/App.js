@@ -5,13 +5,14 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import NavBar from './NavBar';
 import Butterflies from './pages/Butterflies';
 import ButterflyList from './pages/ButterflyList';
+import Butterfly from './pages/Butterfly';
 import NewButterfly from './pages/NewButterfly';
 import Login from './pages/Login';
 import Signup from './pages/Signup';
 
 function App() {
 
-  const [showNav, setShowNav] = useState(true);
+  const [showNav, setShowNav] = useState(false);
 
   return (
   <BrowserRouter>
@@ -19,10 +20,11 @@ function App() {
   {showNav && <NavBar /> }
   <div id="page-body">
   <Routes>
-    <Route path="/login" element={<Login  funcNav={setShowNav} />} />
-    <Route path="/:id" element={<NewButterfly funcNav={setShowNav} />} />
-    <Route path="/" element={<Login  funcNav={setShowNav} />}  />
+    <Route path="/login" element={<Login />} />
+    <Route path="/:id" element={<NewButterfly  />} />
+    <Route path="/" element={<Login />}  />
     <Route path="/butterflies" element={<Butterflies />} />
+    <Route path="/butterfly/:id" element={<Butterfly />} />    
     <Route path="/list" element={<ButterflyList />} />
     <Route path="/signup" element={<Signup />} />
   </Routes>
