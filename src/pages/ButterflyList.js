@@ -1,5 +1,6 @@
 import {butterflies } from './butterfly-data';
 import { Datatable } from './Datatable';
+import NavBar from '../NavBar';
 
 const ButterflyList = () => {
 
@@ -11,9 +12,12 @@ const ButterflyList = () => {
     ];
 
   return (
-    <div className="half-size">
+    <div>
+    <NavBar />
+    <div className="halfsize">
     <h1><img src="./favicon.ico" alt="butterfly" /> Butterfly List</h1>
     <Datatable rows={butterflies} columns={columns} />
+    </div>
     </div>
   );
 };

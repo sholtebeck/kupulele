@@ -1,22 +1,23 @@
 import React, { useState } from 'react';
 import { firestore } from '../firebase/config';
-import {  collection, doc, addDoc, setDoc } from "firebase/firestore";
+import {  collection, doc, addDoc, setDoc } from "firebase/firestore"
+import ProfileImage from '../ProfileImage';
 
 function getSex(s) {
-  return s==='F' ? "Female" : s==='M' ? "Male" : "Undefined";
+  return s[0]==='F' ? "Female" : s[0]==='M' ? "Male" : "Undefined";
 }
-
 
 const Butterfly = ({action,butterfly,handleClear,handleUpsert}) => {
 
   const [newId,setNewId] = useState(butterfly.id);
   const [newName, setNewName] = useState(butterfly.name);
-  const [newSex, setNewSex] = useState(butterfly.sex);
+  const [newSex, setNewSex] = useState(butterfly.sex[0]);
   const [newDate, setNewDate] = useState(butterfly.date);
+  const [newOhana, setNewOhana] = useState(butterfly.ohana||"");
 
   const handleSave = async () => {
-    console.log("saving "+newName+" "+newId)
     const newButterfly = { id: newId, name: newName, date: newDate, sex: newSex }
+    if (newOhana) { newButterfly.ohana = newOhana }
     console.log(newId, JSON.stringify(newButterfly));
     if (newId) {
       await setDoc(doc(firestore, "butterflies", newId), newButterfly);
@@ -36,16 +37,10 @@ const Butterfly = ({action,butterfly,handleClear,handleUpsert}) => {
   }
 
   return (
-    <div className="App">
-  <p></p>
+    <div className="App top-table">
 <h1> <img src="/favicon.ico" alt="butterfly" /> {action} {getName()}  </h1>
-<p></p>
-       <table className="ui celled table no-border">
-        <thead><tr>
-          <th>Field</th>
-          <th>Value</th>
-          </tr>
-        </thead>
+
+       <table className="ui table">
          <tbody>
           <tr>
             <td className="column-header">ID</td>
@@ -80,12 +75,29 @@ const Butterfly = ({action,butterfly,handleClear,handleUpsert}) => {
       <tr>
         <td className="column-header">Sex</td>
       <td>
-      <select name="sex"  value={newSex} 
+      <select name="sex"  value={newSex}
       onChange={(event) => { setNewSex(event.target.value) }}>
+    <option value="M">Male</option> 
     <option value="F">Female</option>
-    <option value="M">Male</option>
     <option value="">Undefined</option>
     </select>
+    </td>
+    </tr>
+    <tr>
+        <td className="column-header">Ohana</td>
+      <td>
+      <input 
+        value={newOhana}
+        onChange={(event) => {
+          setNewOhana(event.target.value);
+        }}
+      />   
+    </td>
+    </tr>
+    <tr>
+        <td className="column-header">Photo</td>
+      <td>
+        <div className="photo-update"> <ProfileImage id={newId} /> </div>
     </td>
     </tr>
       <tr>

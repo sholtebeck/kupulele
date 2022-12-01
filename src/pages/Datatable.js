@@ -64,7 +64,6 @@ export function Datatable({ columns, rows, handleAdd, handleClear, handleEdit, h
                     <button onClick={clearAll}><i className="filter icon"></i></button>
             {handleAdd && <button onClick={handleAdd}><i className="add icon"></i></button> }
             </div>
-    <p/>
             <table className="ui celled table">
                 <thead>
                     <tr>

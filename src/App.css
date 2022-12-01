@@ -82,7 +82,8 @@ header h2 {
 
 /* profile image */
 .profile-image {
-  padding: 20px;
+  padding: 5px;
+  width: 100%;
 }
 
 .profile-image img {
@@ -95,9 +96,14 @@ header h2 {
 }
 
 .upload-button {
-  float: right;
-  margin-top: 20px;
+  float: left;
+  width: 110px;
 }
+.delete-button {
+  float: right;
+  width: 50px;
+}
+
 
 select {
   width: 100px;
@@ -153,15 +159,15 @@ nav ul {
 nav li {
   display: inline-block;
   font-size: 16px;
-  padding-top: 15px;
-  padding-bottom: 15px;
+  padding-top: 10px;
+  padding-bottom: 10px;
 }
 
 nav a {
   text-decoration: none;
   color: black;
   font-weight: bold;
-  padding: 24px 32px;
+  padding: 10px 20px;
 }
 
 nav a:hover {
@@ -171,11 +177,27 @@ nav a:hover {
 
 .nav-right {
   position: absolute;
-  top: 8px;
+  top: 1px;
   right: 8px;
 }
 
 #page-body {
   margin: auto;
   padding-top: 50px;
+}
+
+div.halfsize {
+  max-width: 600px;
+  margin: 10px;
+  border: none;
+}
+
+div.photo-update {
+  max-width: 170px;
+  margin: 0px;
+  border: none;
+}
+
+.top-table {
+  margin-top: 30px;
 }

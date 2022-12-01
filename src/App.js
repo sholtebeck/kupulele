@@ -1,5 +1,5 @@
 import './App.css';
-import {useState} from 'react';
+//import {useState} from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 //import Header from './Header';
 import NavBar from './NavBar';
@@ -12,7 +12,8 @@ import Signup from './pages/Signup';
 
 function App() {
 
-  const [showNav, setShowNav] = useState(false);
+//  const [showNav, setShowNav] = useState(false);
+const showNav = false;
 
   return (
   <BrowserRouter>

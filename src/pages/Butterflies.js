@@ -4,6 +4,7 @@ import { firestore } from '../firebase/config';
 import { collection, doc, getDocs,  deleteDoc,  query, orderBy} from "firebase/firestore";
 import { Datatable } from './Datatable';
 import Butterfly from './Butterfly';
+import NavBar from '../NavBar';
 
 
 function getSex(s) {
@@ -14,6 +15,7 @@ function getDate() {
   return today.toISOString().split('T')[0]
 }
 
+
 const Butterflies = () => {
   const { user, isLoading } = UserProvider();
   //const userName = getUser(user.displayName);
@@ -22,49 +24,47 @@ const Butterflies = () => {
     { accessor: 'id', label: 'ID' },
     { accessor: 'name', label: 'Name ' },
     { accessor: 'date', label: 'Date ' },
-    { accessor: 'sex', label: 'Sex ' },
-  ];
+    { accessor: 'sex', label: 'Sex ' }
+   ];
 
   const [butterflies, setButterflies] = useState([]);
   const [butterfly, setButterfly] = useState({});
   const [action, setAction] = useState("");
-  const [message,setMessage] = useState("");
+  const [message, setMessage] = useState("");
 
   const handleAdd = () => {
-    setButterfly({id:"0",name:"",sex:"",date:getDate()});
+    setButterfly({id:nextID(),name:"",sex:" ",date:getDate()});
     setAction("Add");
-//    setNewId(null)
-//    setNewName("")
-//    setNewSex("")
-//    setNewDate(getDate())
+    setMessage("Adding New Butterfly");
   }
   
+  function nextID() {
+    let lastId=butterflies.length+101;
+    return lastId.toString();
+  }
   
   const handleClear = () => {
-    setButterfly({id:"0",name:"",sex:"",date:getDate()});
+    setButterfly({id:"0",name:"",sex:"",date:getDate(),ohana:""});
     setAction("");
-  //  setNewId(null)
-  //  setNewName("")
-  //  setNewSex("")
-  //  setNewDate(getDate())
+    setMessage("");
   }
 
 
   const handleDelete = async (id) => {
         await deleteDoc(doc(firestore, "butterflies", id));
         setButterflies(butterflies.filter(butterfly => butterfly.id !== id));
-        setMessage("deleted butterfly:" + id)
   };
 
   const handleEdit = (event, butterfly) => {
     console.log("editing:"+butterfly.id)
     setButterfly(butterfly);
+    setMessage("Editing "+butterfly.name)
     setAction("Edit");
   };
 
   const handleUpsert = (newButterfly) => {
-    setButterflies(butterflies.filter(butterfly => butterfly.id !== newButterfly.id))
-    setButterflies([newButterfly,...butterflies]);
+    setButterflies([newButterfly,...butterflies.filter(butterfly => butterfly.id !== newButterfly.id)])
+    setMessage(newButterfly.name+" updated")
     setAction("");
 };
 
@@ -77,7 +77,6 @@ const Butterflies = () => {
       // set sex for each butterfly
       butterflies.forEach (butterfly => { butterfly.sex=getSex(butterfly.sex) });
       setButterflies(butterflies);
-      setMessage("Welcome "+ user.email)
      };
 
     if (!isLoading) {
@@ -87,12 +86,11 @@ const Butterflies = () => {
 
   return (
     <div className="App">
-        <h3>{message}</h3>
-  <div className="ui two column grid">
+      <NavBar message={message}/>
+  {!isLoading && <div className="ui two column grid">
     <div className="row"> 
   <div className="column">
-      <h1><img src="./favicon.ico" alt="butterfly" /> Butterflies</h1> 
-    
+      <h1><img src="./favicon.ico" alt="butterfly" /> Butterflies </h1> 
        <Datatable rows={butterflies} columns={columns} 
           handleAdd={handleAdd}
           handleClear={handleClear}
@@ -107,6 +105,7 @@ const Butterflies = () => {
       </div>
       </div>
       </div>
+}
     </div>
   );
 };
