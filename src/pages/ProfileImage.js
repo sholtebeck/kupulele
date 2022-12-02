@@ -5,7 +5,7 @@ import { updatePath } from './firebase/firestore';
 
 export const ProfileImage = ({ id, setNewPath }) => {
   const fileInput = useRef(null);
-  const filePath = `images/${id}_200x200`;
+  const filePath = `images/${id}`;
   const [imageUrl, setImageUrl] = useState('');
   const [uploadProgress, setUploadProgress] = useState(0);
 

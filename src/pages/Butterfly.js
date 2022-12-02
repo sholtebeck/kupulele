@@ -14,10 +14,12 @@ const Butterfly = ({action,butterfly,handleClear,handleUpsert}) => {
   const [newSex, setNewSex] = useState(butterfly.sex[0]);
   const [newDate, setNewDate] = useState(butterfly.date);
   const [newOhana, setNewOhana] = useState(butterfly.ohana||"");
+  const [newPath, setNewPath] = useState(butterfly.path||"");
 
   const handleSave = async () => {
     const newButterfly = { id: newId, name: newName, date: newDate, sex: newSex }
     if (newOhana) { newButterfly.ohana = newOhana }
+    if (newPath) { newButterfly.path = newPath }
     console.log(newId, JSON.stringify(newButterfly));
     if (newId) {
       await setDoc(doc(firestore, "butterflies", newId), newButterfly);
@@ -97,7 +99,7 @@ const Butterfly = ({action,butterfly,handleClear,handleUpsert}) => {
     <tr>
         <td className="column-header">Photo</td>
       <td>
-        <div className="photo-update"> <ProfileImage id={newId} /> </div>
+        <div className="photo-update"> <ProfileImage id={newId} setNewPath={setNewPath} /> </div>
     </td>
     </tr>
       <tr>

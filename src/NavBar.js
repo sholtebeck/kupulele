@@ -10,6 +10,9 @@ const NavBar = ({message}) => {
         <nav>
             <ul> 
             <li>
+                    <Link to="/grid">Grid</Link>
+                </li>
+            <li>
                     <Link to="/list">List</Link>
                 </li>
             { user &&  <li><Link to="/butterflies">Edit</Link></li>   }

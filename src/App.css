@@ -201,3 +201,21 @@ div.photo-update {
 .top-table {
   margin-top: 30px;
 }
+
+.grid-5x5 {
+	/* Activate grid layout */
+	display: grid;
+	/* Create 5 columns, each 1 "fractional unit" wide */
+	grid-template-columns: repeat(5, 1fr);
+	/* Create 5 rows, each 1 "fractional unit" high */
+	grid-template-rows: repeat(5, 1fr);
+	/* Add a 10px gap between columns and rows */
+	grid-gap: 10px;
+}
+
+.grid-item {
+	background-color: rgba(229, 229, 229, 0.5);
+	border: 1px solid rgba(128, 128, 128, 0.5);
+	padding: 0.25em;
+  vertical-align: center; 
+}
