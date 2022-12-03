@@ -1,15 +1,32 @@
 import React, { useRef, useState, useEffect } from 'react';
 import { storage } from "./firebase/config";
 import { ref, deleteObject, uploadBytesResumable, getDownloadURL } from "firebase/storage";
-import { updatePath } from './firebase/firestore';
+import { updatePath, getFilePath,getUrl } from './firebase/firestore';
 
-export const ProfileImage = ({ id, setNewPath }) => {
+export const ProfileImage = ({ id, setNewPath, user }) => {
   const fileInput = useRef(null);
-  const filePath = `images/${id}_200x200`;
+  const filePath = getFilePath(id);
   const [imageUrl, setImageUrl] = useState('');
+  const [isLoading, setLoading] = useState(false);
+
   const [uploadProgress, setUploadProgress] = useState(0);
 
   useEffect(() => {
+    const loadUrl = async () => {
+      setLoading(true);
+      const thisUrl=await getUrl(filePath);
+      setImageUrl(thisUrl);
+      setLoading(false);
+    };
+
+    if(!isLoading) {
+      loadUrl();
+    }
+    
+  }, [filePath,isLoading]);
+
+  useEffect(() => {
+
     getDownloadURL(ref(storage, filePath)).then((url) => !!url && setImageUrl(url));
   }, [filePath]);
 
@@ -61,12 +78,13 @@ export const ProfileImage = ({ id, setNewPath }) => {
   return (
     <div className="profile-image">
       {(uploadProgress>0 && uploadProgress<100) && <progress style={{ width: '100%' }} max="100"  value={uploadProgress}  />    }
-         <img
+      <img
         className="ui image"
         src={imageUrl || '/logo192.png'}
         alt="profile"
         width="100"
-      />
+        hidden={isLoading}
+      /> 
       <input
         className="file-input"
         type="file"
@@ -74,7 +92,7 @@ export const ProfileImage = ({ id, setNewPath }) => {
         ref={fileInput}
         onChange={(e) => fileChange(e.target.files)}
       />
-      {uploadButton()}
+      {user && uploadButton()}
     </div>
   );
 };

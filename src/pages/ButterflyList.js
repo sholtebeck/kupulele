@@ -1,8 +1,12 @@
-import {butterflies } from './butterfly-data';
+//import {butterflies } from './butterfly-data';
+import { useState, useEffect } from 'react';
+import { getButterflies } from '../firebase/firestore';
 import { Datatable } from './Datatable';
 import NavBar from '../NavBar';
 
 const ButterflyList = () => {
+
+  const [butterflies, setButterflies] = useState([]);
 
   const columns = [
     { accessor: 'id', label: 'ID' },
@@ -10,6 +14,14 @@ const ButterflyList = () => {
     { accessor: 'date', label: 'Date ' },
     { accessor: 'sex', label: 'Sex ' },
     ];
+
+    useEffect(() => {
+      const loadButterflies = async () => {
+        const butterflyList=await getButterflies();
+        setButterflies(butterflyList);
+      };
+      loadButterflies();
+    }, []);
 
   return (
     <div>

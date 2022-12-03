@@ -1,9 +1,7 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { getAuth, signInWithEmailAndPassword, GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
-
-//import GoogleButton from "react-google-button";
-//import { login, googleLogin } from '../firebase/auth';
+import useUser from '../hooks/useUser';
 
 const Login = () => {
  
@@ -13,7 +11,14 @@ const Login = () => {
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
 //    const emap = {"Susy":"ingrahas@gmail.com","Steve":"sholtebeck@gmail.com"}
+    const {user } = useUser();
     const navigate = useNavigate();
+	
+	useEffect(() => {
+        if (user) {
+          navigate("/");
+        }
+    },[navigate,user]);
 
     const logIn = async () => {
         try {

@@ -1,23 +1,20 @@
 import React, { useState, useEffect } from 'react';
-import UserProvider from '../firebase/UserProvider'
-import { firestore } from '../firebase/config';
-import { collection, doc, getDocs,  deleteDoc,  query, orderBy} from "firebase/firestore";
+import { useNavigate } from 'react-router-dom';
+import useUser from '../hooks/useUser';
+import { deleteButterfly, getButterflies } from '../firebase/firestore';
 import { Datatable } from './Datatable';
 import Butterfly from './Butterfly';
 import NavBar from '../NavBar';
 
 
-function getSex(s) {
-  return s==='F' ? "Female" : s==='M' ? "Male" : "Undefined";
-}
 function getDate() {
   const today=new Date();
   return today.toISOString().split('T')[0]
 }
 
-
 const Butterflies = () => {
-  const { user, isLoading } = UserProvider();
+  const { user, isLoading } = useUser();
+  const navigate = useNavigate();
   //const userName = getUser(user.displayName);
 
   const columns = [
@@ -49,9 +46,8 @@ const Butterflies = () => {
     setMessage("");
   }
 
-
   const handleDelete = async (id) => {
-        await deleteDoc(doc(firestore, "butterflies", id));
+        await deleteButterfly(id);
         setButterflies(butterflies.filter(butterfly => butterfly.id !== id));
   };
 
@@ -66,27 +62,27 @@ const Butterflies = () => {
     setButterflies([newButterfly,...butterflies.filter(butterfly => butterfly.id !== newButterfly.id)])
     setMessage(newButterfly.name+" updated")
     setAction("");
-};
+  };
 
-  useEffect(() => {
-    const getButterflies = async () => {
-      const butterfliesCollectionRef = collection(firestore, "butterflies");
-      const butterfliesQuery = query(butterfliesCollectionRef, orderBy("date","desc"));
-      const data = await getDocs(butterfliesQuery);
-      const butterflies = data.docs.map((doc) => ({ ...doc.data(), id: doc.id }));
-      // set sex for each butterfly
-      butterflies.forEach (butterfly => { butterfly.sex=getSex(butterfly.sex) });
-      setButterflies(butterflies);
-     };
+useEffect(() => {
+  const loadButterflies = async () => {
+    const butterflyList=await getButterflies();
+    setButterflies(butterflyList);
+  };
 
-    if (!isLoading) {
-         getButterflies();
-    }
-  }, [user, isLoading]);
+  if (!user && !isLoading) {
+    navigate("/login");
+  }
+
+  if (!isLoading) {
+    loadButterflies();
+  }
+
+}, [navigate,user,isLoading]);
 
   return (
     <div className="App">
-      <NavBar message={message}/>
+      <NavBar message={message} user={user}/>
   {!isLoading && <div className="ui two column grid">
     <div className="row"> 
   <div className="column">
