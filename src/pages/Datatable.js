@@ -42,7 +42,7 @@ export function Datatable({ columns, rows, handleAdd, handleClear, handleEdit, h
     }
 
     const clearAll = () => {
-        setSort({ order: 'desc', orderBy: 'date' })
+        setSort({ order: 'desc', orderBy: '_id' })
         setActivePage(1)
         setFilters({})
         // clear inputs
@@ -96,7 +96,7 @@ export function Datatable({ columns, rows, handleAdd, handleClear, handleEdit, h
                                     if (column.format) {
                                         return <td key={column.accessor}>{column.format(row[column.accessor])}</td>
                                     }
-                                    if (column.accessor === "id") {
+                                    if (column.accessor === "_id") {
                                         return <td key={column.accessor}><a href={row.id}>{row[column.accessor]}</a></td>
                                     }
                                     return <td key={column.accessor}>{row[column.accessor]}</td>

@@ -1,7 +1,8 @@
 import { firestore, storage } from './config';
 import { getSex } from '../pages/butterfly-data';
-import { collection, deleteDoc, doc, getDoc, getDocs, orderBy, query, setDoc, updateDoc, where  } from "firebase/firestore";
+import { collection, deleteDoc, doc, getDoc, getDocs, limit, orderBy, query, setDoc, updateDoc, where  } from "firebase/firestore";
 import { ref, getDownloadURL } from "firebase/storage";
+
 
 function getDate() {
     const today=new Date();
@@ -26,7 +27,7 @@ export const getButterflies = async () => {
   const butterfliesQuery = query(butterfliesCollectionRef, orderBy("date","desc"));
   const data = await getDocs(butterfliesQuery);
   const butterflies = data.docs.map((doc) => ({ ...doc.data(), id: doc.id }));
-  butterflies.forEach (butterfly => { butterfly.sex=getSex(butterfly.sex) });
+  butterflies.forEach (butterfly => { butterfly._id=parseInt(butterfly.id); butterfly.sex=getSex(butterfly.sex); });
   return butterflies;
 };
 
@@ -51,11 +52,12 @@ export const getUrl = async (path) => {
 
 export const getImages = async () => {
   const butterfliesCollectionRef = collection(firestore, "butterflies");
-  const imagesQuery = query(butterfliesCollectionRef, where("path", ">=", "images/"));
+  const imagesQuery = query(butterfliesCollectionRef, where("path", ">=", "images/"), orderBy("path"), limit(100));
   const data = await getDocs(imagesQuery);
   const images = data.docs.map((doc) => ({ ...doc.data(), id: doc.id }));
   images.forEach (async image => { 
     image.path = getFilePath(image.id);
+//	  image.urlPath = await getDownloadURL(ref(storage, image.path));
   });
   return images;
 };

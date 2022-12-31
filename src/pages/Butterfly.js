@@ -1,11 +1,8 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { setButterfly, getFilePath } from '../firebase/firestore';
 import ProfileImage from '../ProfileImage';
 import useUser from '../hooks/useUser';
-
-function getSex(s) {
-  return s[0]==='F' ? "Female" : s[0]==='M' ? "Male" : "Undefined";
-}
+import { getSex, randomName} from './butterfly-data';
 
 const Butterfly = ({action,butterfly,handleClear,handleUpsert}) => {
   const {user } = useUser();
@@ -16,6 +13,14 @@ const Butterfly = ({action,butterfly,handleClear,handleUpsert}) => {
   const [newOhana, setNewOhana] = useState(butterfly.ohana||"");
   const [newPath, setNewPath] = useState(butterfly.path||"");
 
+  useEffect(() => {
+    setNewId(butterfly.id);
+    setNewName(butterfly.name);
+    setNewSex(butterfly.sex);
+    setNewDate(butterfly.date);
+    setNewOhana(butterfly.ohana);
+    setNewPath(butterfly.path)
+  }, [butterfly]);
 
   const handleSave = async () => {
     const newButterfly = { id: newId, name: newName, date: newDate, sex: newSex }
@@ -24,6 +29,7 @@ const Butterfly = ({action,butterfly,handleClear,handleUpsert}) => {
     //console.log(newId, JSON.stringify(newButterfly));
     await setButterfly(newButterfly);
     newButterfly.sex=getSex(newButterfly.sex);
+    newButterfly._id=parseInt(newButterfly.id);
     handleUpsert(newButterfly);
   };
 
@@ -35,6 +41,10 @@ const Butterfly = ({action,butterfly,handleClear,handleUpsert}) => {
     return action==="Add" ? "Butterfly" : newName;
   }
 
+  function setRandomName() {
+      setNewName(randomName(newSex));
+  }
+ 
   function updatePath() {
     const filePath=getFilePath(newId)
     setNewPath(filePath)
@@ -62,7 +72,7 @@ const Butterfly = ({action,butterfly,handleClear,handleUpsert}) => {
         onChange={(event) => {
           setNewName(event.target.value);
         }}
-      />       </td>
+      />  <button onClick={setRandomName} title="get random name"><i className="random icon"></i></button>     </td>
       </tr>
       <tr>
         <td className="column-header">Date</td>
@@ -80,8 +90,9 @@ const Butterfly = ({action,butterfly,handleClear,handleUpsert}) => {
       <td>
       <select name="sex"  value={newSex}
       onChange={(event) => { setNewSex(event.target.value) }}>
-    <option value="M">Male</option> 
-    <option value="F">Female</option>
+    <option value={newSex}>{getSex(newSex)}</option>
+    {newSex !== "Male" && <option value="M">Male</option>  } 
+    {newSex !== "Female" && <option value="F">Female</option> }
     <option value="">Undefined</option>
     </select>
     </td>
@@ -106,7 +117,7 @@ const Butterfly = ({action,butterfly,handleClear,handleUpsert}) => {
           setNewPath(event.target.value);
         }}
       />  
-      <button onClick={updatePath}>Update Path</button> 
+      <button onClick={updatePath}><i className="refresh icon"></i></button> 
     </td>
     </tr>
     <tr>

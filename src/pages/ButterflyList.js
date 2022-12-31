@@ -9,16 +9,18 @@ const ButterflyList = () => {
   const [butterflies, setButterflies] = useState([]);
 
   const columns = [
-    { accessor: 'id', label: 'ID' },
+    { accessor: '_id', label: 'ID' },
     { accessor: 'name', label: 'Name ' },
     { accessor: 'date', label: 'Date ' },
     { accessor: 'sex', label: 'Sex ' },
+    { accessor: 'ohana', label: 'Ohana' },
     ];
 
     useEffect(() => {
       const loadButterflies = async () => {
         const butterflyList=await getButterflies();
         setButterflies(butterflyList);
+        console.log(butterflyList);
       };
       loadButterflies();
     }, []);

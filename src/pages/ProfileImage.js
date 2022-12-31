@@ -1,16 +1,18 @@
 import React, { useRef, useState, useEffect } from 'react';
 import { storage } from "./firebase/config";
 import { ref, deleteObject, uploadBytesResumable, getDownloadURL } from "firebase/storage";
-import { updatePath } from './firebase/firestore';
+import {updatePath } from './firebase/firestore';
 
-export const ProfileImage = ({ id, setNewPath }) => {
+export const ProfileImage = ({ id, path, setNewPath }) => {
   const fileInput = useRef(null);
-  const filePath = `images/${id}`;
+  const filePath = path;
   const [imageUrl, setImageUrl] = useState('');
   const [uploadProgress, setUploadProgress] = useState(0);
 
   useEffect(() => {
-    getDownloadURL(ref(storage, filePath)).then((url) => !!url && setImageUrl(url));
+    if (filePath) {
+    getDownloadURL(ref(storage, filePath)).then((url) => !!url && setImageUrl(url)).error(setImageUrl(""));
+    }
   }, [filePath]);
 
   const handleDelete = async () => {

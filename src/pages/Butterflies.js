@@ -18,7 +18,7 @@ const Butterflies = () => {
   //const userName = getUser(user.displayName);
 
   const columns = [
-    { accessor: 'id', label: 'ID' },
+    { accessor: '_id', label: 'ID' },
     { accessor: 'name', label: 'Name ' },
     { accessor: 'date', label: 'Date ' },
     { accessor: 'sex', label: 'Sex ' }
@@ -36,7 +36,7 @@ const Butterflies = () => {
   }
   
   function nextID() {
-    let lastId=butterflies.length+101;
+    let lastId=butterflies.length+790;
     return lastId.toString();
   }
   
@@ -52,7 +52,7 @@ const Butterflies = () => {
   };
 
   const handleEdit = (event, butterfly) => {
-    console.log("editing:"+butterfly.id)
+    console.log("editing:"+butterfly.id);
     setButterfly(butterfly);
     setMessage("Editing "+butterfly.name)
     setAction("Edit");

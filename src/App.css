@@ -187,7 +187,7 @@ nav a:hover {
 }
 
 div.halfsize {
-  max-width: 600px;
+  max-width: 750px;
   margin: 10px;
   border: none;
 }
@@ -218,4 +218,13 @@ div.photo-update {
 	border: 1px solid rgba(128, 128, 128, 0.5);
 	padding: 0.25em;
   vertical-align: center; 
+}
+
+#add-comment {
+  padding: 16px;
+  margin-left: 5px;
+}
+
+.comment {
+  padding: 5px;
 }
