@@ -9,8 +9,11 @@ function ButterflyGrid() {
   const [images, setImages] = useState([]);
 
   useEffect(() => {
+    const gridSort = (a,b) => { return parseInt(b.id) - parseInt(a.id); }
+
     const loadImages = async () => {
       const gridImages=await getImages();
+      gridImages.sort(gridSort);
       setImages(gridImages);
     };
     loadImages();

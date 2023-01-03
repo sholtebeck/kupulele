@@ -7,8 +7,9 @@ import Butterfly from './Butterfly';
 import NavBar from '../NavBar';
 
 
-function getDate() {
+function yesterDate() {
   const today=new Date();
+  today.setDate(today.getDate()-1);
   return today.toISOString().split('T')[0]
 }
 
@@ -30,18 +31,18 @@ const Butterflies = () => {
   const [message, setMessage] = useState("");
 
   const handleAdd = () => {
-    setButterfly({id:nextID(),name:"",sex:" ",date:getDate()});
+    setButterfly({id:nextID(),name:"",sex:" ",date:yesterDate()});
     setAction("Add");
     setMessage("Adding New Butterfly");
   }
   
   function nextID() {
-    let lastId=butterflies.length+790;
+    let lastId=Math.max(...butterflies.map(b => parseInt(b.id)))+1;
     return lastId.toString();
   }
   
   const handleClear = () => {
-    setButterfly({id:"0",name:"",sex:"",date:getDate(),ohana:""});
+    setButterfly({id:"0",name:"",sex:"",date:yesterDate(),ohana:""});
     setAction("");
     setMessage("");
   }

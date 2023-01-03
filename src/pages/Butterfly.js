@@ -12,6 +12,7 @@ const Butterfly = ({action,butterfly,handleClear,handleUpsert}) => {
   const [newDate, setNewDate] = useState(butterfly.date);
   const [newOhana, setNewOhana] = useState(butterfly.ohana||"");
   const [newPath, setNewPath] = useState(butterfly.path||"");
+  const showPath=false;
 
   useEffect(() => {
     setNewId(butterfly.id);
@@ -108,6 +109,7 @@ const Butterfly = ({action,butterfly,handleClear,handleUpsert}) => {
       />   
     </td>
     </tr>
+    {showPath &&
     <tr>
         <td className="column-header">Path</td>
       <td>
@@ -120,6 +122,7 @@ const Butterfly = ({action,butterfly,handleClear,handleUpsert}) => {
       <button onClick={updatePath}><i className="refresh icon"></i></button> 
     </td>
     </tr>
+    }
     <tr>
         <td className="column-header">Photo</td>
       <td>

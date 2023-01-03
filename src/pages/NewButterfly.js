@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-//import { firestore } from '../firebase/config';
 import {getButterfly} from '../firebase/firestore';
+import {getSex}  from './butterfly-data';
 import ProfileImage from '../ProfileImage';
 import AddComment from './AddComment';
 import Comments from './Comments';
@@ -46,7 +46,7 @@ function NewButterfly() {
 <div className="column" >
   <h2>ID: {butterfly.id} </h2>
   <h2>Name: {butterfly.name} </h2>
-  <h2>Sex: {butterfly.sex}</h2> 
+  {butterfly.sex && <h2>Sex: {getSex(butterfly.sex)}</h2> } 
   <h2>Birthday: {butterfly.date} </h2>
   {butterfly.ohana && <h2>Ohana: {butterfly.ohana} </h2>}
 

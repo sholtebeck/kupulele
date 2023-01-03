@@ -1,6 +1,6 @@
 {
-  "name": "kuputest",
-  "version": "0.2.0",
+  "name": "kupulele",
+  "version": "0.3.0",
   "private": true,
   "dependencies": {
     "firebase": "^9.6.0",
