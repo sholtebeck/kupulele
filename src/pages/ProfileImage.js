@@ -1,11 +1,11 @@
 import React, { useRef, useState, useEffect } from 'react';
 import { storage } from "./firebase/config";
 import { ref, deleteObject, uploadBytesResumable, getDownloadURL } from "firebase/storage";
-import {updatePath } from './firebase/firestore';
+import {getFilePath, updatePath } from './firebase/firestore';
 
-export const ProfileImage = ({ id, path, setNewPath }) => {
+export const ProfileImage = ({ id, setNewPath }) => {
   const fileInput = useRef(null);
-  const filePath = path;
+  const filePath = getFilePath(id);
   const [imageUrl, setImageUrl] = useState('');
   const [uploadProgress, setUploadProgress] = useState(0);
 

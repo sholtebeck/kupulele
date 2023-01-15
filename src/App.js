@@ -1,7 +1,7 @@
 import './App.css';
 //import {useState} from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-//import Header from './Header';
+import HomePage from './pages/HomePage';
 import NavBar from './NavBar';
 import Butterflies from './pages/Butterflies';
 import ButterflyGrid from './pages/ButterflyGrid';
@@ -23,7 +23,7 @@ const showNav = false;
   <div id="page-body">
   <Routes>
     <Route path="/login" element={<Login />} />
-    <Route path="/" element={<Butterflies />}  />
+    <Route path="/" element={<HomePage />}  />
     <Route path="/butterflies" element={<Butterflies />} />
     <Route path="/butterfly/:id" element={<Butterfly />} />    
     <Route path="/grid" element={<ButterflyGrid />} />

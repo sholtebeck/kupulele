@@ -87,14 +87,14 @@ const Butterfly = ({action,butterfly,handleClear,handleUpsert}) => {
       </td>
       </tr>
       <tr>
-        <td className="column-header">Sex</td>
+        <td className="column-header">Sex {newSex}</td>
       <td>
       <select name="sex"  value={newSex}
       onChange={(event) => { setNewSex(event.target.value) }}>
     <option value={newSex}>{getSex(newSex)}</option>
     {newSex !== "Male" && <option value="M">Male</option>  } 
     {newSex !== "Female" && <option value="F">Female</option> }
-    <option value="">Undefined</option>
+    {newSex !== " " && <option value="">Undefined</option> }
     </select>
     </td>
     </tr>

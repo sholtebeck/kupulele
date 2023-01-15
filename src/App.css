@@ -33,6 +33,11 @@ header h2 {
 
 .App {
   margin-top: 10px;
+  margin: 10px;
+}
+
+.HomePage {
+  margin: 10px;
 }
 
 .login-container {
@@ -187,7 +192,7 @@ nav a:hover {
 }
 
 div.halfsize {
-  max-width: 750px;
+  max-width: 800px;
   margin: 10px;
   border: none;
 }
@@ -228,3 +233,4 @@ div.photo-update {
 .comment {
   padding: 5px;
 }
+

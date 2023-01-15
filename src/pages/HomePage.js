@@ -1,31 +1,22 @@
+import NavBar from '../NavBar';
+
 const HomePage = () => (
-    <>
-    <h1>Hello, welcome to my blog!</h1>
-    <p>
-        Welcome to my blog! Proin congue
-        ligula id risus posuere, vel eleifend ex egestas. Sed in turpis leo. 
-        Aliquam malesuada in massa tincidunt egestas. Nam consectetur varius turpis, 
-        non porta arcu porttitor non. In tincidunt vulputate nulla quis egestas. Ut 
-        eleifend ut ipsum non fringilla. Praesent imperdiet nulla nec est luctus, at 
-        sodales purus euismod.
-    </p>
-    <p>
-        Donec vel mauris lectus. Etiam nec lectus urna. Sed sodales ultrices dapibus. 
-        Nam blandit tristique risus, eget accumsan nisl interdum eu. Aenean ac accumsan 
-        nisi. Nunc vel pulvinar diam. Nam eleifend egestas viverra. Donec finibus lectus 
-        sed lorem ultricies, eget ornare leo luctus. Morbi vehicula, nulla eu tempor 
-        interdum, nibh elit congue tellus, ac vulputate urna lorem nec nisi. Morbi id 
-        consequat quam. Vivamus accumsan dui in facilisis aliquet.,
-    </p>
-    <p>
-        Etiam nec lectus urna. Sed sodales ultrices dapibus. 
-        Nam blandit tristique risus, eget accumsan nisl interdum eu. Aenean ac accumsan 
-        nisi. Nunc vel pulvinar diam. Nam eleifend egestas viverra. Donec finibus lectus 
-        sed lorem ultricies, eget ornare leo luctus. Morbi vehicula, nulla eu tempor 
-        interdum, nibh elit congue tellus, ac vulputate urna lorem nec nisi. Morbi id 
-        consequat quam. Vivamus accumsan dui in facilisis aliquet.,
-    </p>
-    </>
+    <div className="halfsize">
+    <NavBar />
+    <h1>Aloha, Welcome to Kupulele!</h1>
+    <p><img src="Susy.jpg" alt="Susy" width="400px" /></p>   
+    <h3>I'm Susy from Honolulu and these are my butterflies.</h3> 
+<p>
+I’ve been caring for monarchs since December 2019, when my husband gifted me a butterfly raising kit for Christmas.
+</p>
+<p>
+This season (2022-2023) I started QR-tagging my butterflies when they are released from our lanai on Tantalus (Puʻu ʻōhiʻa).I’m hoping to learn where our butterflies go, whether the same butterflies ever come back to us, and perhaps contribute to answering the question of whether Hawaii monarchs migrate. If you’ve landed on this page, you probably found one of these tagged butterflies. Please log in (sorry, my programmer-husband says it’s necessary to keep the trolls and other internet baddies out) and leave a message about your encounter with one of these beauties!
+</p>
+<p>
+*The name of this site “Kupulele” is a merging of the Indonesian and Hawaiian words for “butterfly” — kupu and pulelehua. 
+</p>
+<p></p>  
+</div>
 );
 
 export default HomePage;
